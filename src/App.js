@@ -10,6 +10,7 @@ import ScrollToTop from './utils/ScrollToTop'
 import './App.css'
 
 function App() {
+  console.log("env")
   console.log(process.env.REACT_APP_DB)
 
 
