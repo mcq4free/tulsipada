@@ -1,0 +1,383 @@
+Cover image for Deploy your projects to Github Pages with GitHub Actions
+pierresaid
+pierresaid
+Posted on Sep 1, 2019 • Updated on Jun 27, 2022
+
+
+58
+
+19
+Deploy your projects to Github Pages with GitHub Actions
+#
+github
+#
+webdev
+#
+devops
+In this post I am going to explain how to set up a basic workflow that uses an existing GitHub action. This workflow will deploy a static web site to GitHub Pages every time a change is made to the master branch.
+
+For this we are going to use the Deploy to GitHub Pages Action.
+
+Create our workflow
+The workflows of the repository are stored in the .github/workflows/ folder.
+
+Create in this folder a .yml file (e.g. deploy-to-gh-pages.yml you can name it however you want) and paste this:
+
+name: Build and Deploy
+on: [push] # defaults to master
+permissions:
+  contents: write
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install and Build 🔧
+        run: |
+          npm install
+          npm run-script build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build # The folder the action should deploy.
+The build step
+    - name: Install and Build 🔧
+      run: |
+        npm install
+        npm run-script build
+In this section we put the script required to compile the code before deploying. If there is no need just remove this section.
+
+Options
+      with:
+        branch: gh-pages
+        folder: dist
+All those options are environment variables that will be used by the Deploy to GitHub Pages Action in order to work.
+
+The BRANCH option is the branch you wish to deploy the build files to. It is gh-pages by default so that github automatically set up your github pages website.
+
+You need to create the gh-pages branch prior to this. The Action will fail if the branch does not exist.
+
+The folder option is the folder in your repository that you want to deploy. It usually is dist for Vue.js apps or build for React.js apps.
+
+the permissions filed is required so that the script has sufficient rights to run.
+
+Optionally if you want to use a specific access token you can add the token option like this:
+
+token: ${{ secrets.ACCESS_TOKEN }}
+
+This option is the access token used to authorize the action to manipulate your repository.
+
+You can generate this token in Profile Settings / Developer settings and add it in your repository's secrets in Settings/Secrets
+
+Custom domain name
+If you are using a custom domain name you will need to add beforehand a CNAME file at the root of the gh_pages branch with your domain name in it.
+
+e.g. dev.to
+
+If you are not using a custom domain name, then do not forget to specify that your project is not hosted at the server root.
+
+For Vue.js apps add this in vue.config.js. Further information.
+module.exports = {
+    publicPath: process.env.NODE_ENV === 'production'
+        ? '/repository-name/'
+        : '/'
+}
+For React.js apps add this your package.json. Further information.
+"homepage":"https://yourusername.github.io/repository-name"
+Specify the branch (Optional)
+By default, this will use the master branch when changes are made.
+
+To change that replace the on: [push] for this property with name of the branch of which you'd like this to run on.
+on:
+  push:
+    branches:
+      - main
+note: Your workflows won't appear in the Actions tab if they are not pushed on the master branch. However, you can still access your workflow’s runs in the commit's detail.
+
+That's it! Push your changes and you can now watch the magic operate in the Actions tab.
+
+Alt Text
+
+And we can see that the app was deployed to GitHub Pages You can check out your deployments by clicking the environment button in the Code tab:
+
+Alt Text
+
+You might have to disable/enable the github page option in the settings tab the first time the action run. You can do that by changing the Source setting to master then back to gh-pages.
+
+The link to your live app is https://yourusername.github.io/repository-name
+
+Top comments (14)
+
+Subscribe
+pic
+Add to the discussion
+ 
+ 
+swinton profile image
+Steve Winton
+•
+Sep 2 '19
+
+Nice write up!
+
+I think ${{ secrets.ACCESS_TOKEN }} in your example can be replaced with ${{ secrets.GITHUB_TOKEN }}, which is a repo-scoped token automatically generated for you by GitHub. Did you try this?
+
+
+4
+ likes
+Like
+Reply
+ 
+ 
+pierresaid profile image
+pierresaid 
+•
+Sep 2 '19 • Edited on Sep 2
+
+Thanks!
+
+I just tried it, but it didn't work.
+Also, I couldn't find the documentation about this auto generated token.
+
+
+1
+ like
+Like
+Reply
+ 
+ 
+swinton profile image
+Steve Winton
+•
+Sep 2 '19
+
+Hmmm. It’s documented here:
+
+help.github.com/en/articles/virtua...
+
+But maybe it doesn’t carry the right permissions for your use case. Did you get a permissions error?
+
+
+1
+ like
+Like
+Thread
+ 
+pierresaid profile image
+pierresaid 
+•
+Sep 2 '19
+
+When the Action try to push the changes, it pops this error in the logs:
+
+fatal: could not read Password for 'https://***@github.com': No such device or address
+
+That must be a permissions error. The personal access token that I generated before (ACCESS_TOKEN) had full control of my private repositories.
+
+
+1
+ like
+Like
+Reply
+ 
+ 
+pierresaid profile image
+pierresaid 
+•
+Sep 2 '19
+
+Fixed it ! 👍
+
+
+3
+ likes
+Like
+Reply
+ 
+ 
+snmi___ profile image
+Sanmi
+•
+Jun 5 '21
+
+How do we implement the process.env with plain html/css/vanilla js?
+
+
+Like
+Reply
+ 
+ 
+renato66 profile image
+Renato Vicente
+•
+Nov 27 '19
+
+could you upgrade this article to v3
+
+
+3
+ likes
+Like
+Reply
+ 
+ 
+pierresaid profile image
+pierresaid 
+•
+Nov 27 '19
+
+Done !
+
+
+2
+ likes
+Like
+Reply
+ 
+ 
+rsalunga29 profile image
+Roland "Akio" Salunga
+•
+Mar 8 '20 • Edited on Mar 8
+
+Very nice article, thank you for this!
+
+
+2
+ likes
+Like
+Reply
+ 
+ 
+pierresaid profile image
+pierresaid 
+•
+Mar 8 '20
+
+Thanks 😀
+
+
+1
+ like
+Like
+Reply
+ 
+ 
+noamtamim profile image
+Noam Tamim
+•
+Dec 23 '19
+
+Please explain -- why should I use it? GitHub Pages are already automatically deployed. What am I missing?
+
+
+1
+ like
+Like
+Reply
+ 
+ 
+pierresaid profile image
+pierresaid 
+•
+Dec 23 '19 • Edited on Jan 6
+
+For project like React, Vue or Angular you will need to build the project to have the html,css and js files that Github Pages can serve.
+
+Github Actions will automate this step for you.
+
+
+2
+ likes
+Like
+Reply
+ 
+ 
+noamtamim profile image
+Noam Tamim
+•
+Dec 24 '19
+
+You mean, for sites that are not simple Jekyll? Got it.
+
+
+2
+ likes
+Like
+Reply
+Code of Conduct • Report abuse
+profile
+Sentry
+PROMOTED
+
+Next.js
+
+Next.js Performance Monitoring
+Within minutes after installing Sentry, software teams are able to trace Next.js performance issues back to a poor performing API call as well as surface all related code errors. Engineering Managers and Developers now have a single tool to optimize the performance of their code and deliver fast customer experiences.
+
+Try Sentry
+
+Read next
+hamatoyogi profile image
+What is a Headless CMS: a Visual Guide
+Yoav Ganbar - Aug 31
+
+shubhamtiwari909 profile image
+Form Handling | React | Part 3 | Components
+Mysterio - Aug 31
+
+anjankarmakar profile image
+Mastering Event Debouncing in JavaScript: A Guide with Practical Example
+Anjan Karmakar - Aug 31
+
+yorchperaza profile image
+Introducing MonkeyslegionDB: A Specialized Database Connection Manager for PHP
+Jorge Peraza - Aug 31
+
+
+pierresaid
+Follow
+ᴅᴇᴠ
+LOCATION
+Paris - France
+EDUCATION
+yes
+JOINED
+Jul 4, 2019
+Trending on DEV Community 
+Sloan the DEV Moderator profile image
+Hello, Me. It's Me! What Advice Would You Give Your Younger Self?
+#discuss #career #codenewbie #beginners
+Pulkit Gupta profile image
+React.js Hooks: A Quick Guide
+#react #webdev #javascript #frontend
+dev.to staff profile image
+If You Switched Languages, Which Would You Choose?
+#discuss
+DEV Community
+
+🌚 Life is too short to browse without dark mode
+
+name: Build and Deploy
+on: [main] # defaults to master
+permissions:
+  contents: write
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install and Build 🔧
+        run: |
+          npm install
+          npm run-script build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build # The folder the action should deploy.
