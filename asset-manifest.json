@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/tulsipada/static/css/main.7f62b67b.chunk.css",
-    "main.js": "/tulsipada/static/js/main.57e4b223.chunk.js",
-    "main.js.map": "/tulsipada/static/js/main.57e4b223.chunk.js.map",
+    "main.js": "/tulsipada/static/js/main.03156abf.chunk.js",
+    "main.js.map": "/tulsipada/static/js/main.03156abf.chunk.js.map",
     "runtime-main.js": "/tulsipada/static/js/runtime-main.3bbc91ca.js",
     "runtime-main.js.map": "/tulsipada/static/js/runtime-main.3bbc91ca.js.map",
     "static/css/2.dd8f2d37.chunk.css": "/tulsipada/static/css/2.dd8f2d37.chunk.css",
@@ -153,6 +153,6 @@
     "static/css/2.dd8f2d37.chunk.css",
     "static/js/2.51d2691e.chunk.js",
     "static/css/main.7f62b67b.chunk.css",
-    "static/js/main.57e4b223.chunk.js"
+    "static/js/main.03156abf.chunk.js"
   ]
 }
