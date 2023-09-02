@@ -5,10 +5,13 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import { Main, BlogPage, ProjectPage } from './pages'
 import { BackToTop } from './components'
 import ScrollToTop from './utils/ScrollToTop'
+// import dotenv from  'dotenv'
 
 import './App.css'
 
 function App() {
+  console.log(process.env.REACT_APP_DB)
+
 
   // const { theme } = useContext(ThemeContext);
 
