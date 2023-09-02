@@ -10,7 +10,6 @@ import ScrollToTop from './utils/ScrollToTop'
 import './App.css'
 
 function App() {
-  console.log("env")
   console.log(process.env.REACT_APP_DB)
 
 
@@ -23,7 +22,7 @@ function App() {
   return (
     <div className="app">
       <Router>
-        <ScrollToTop/>
+        <ScrollToTop />
         <Switch>
           <Route path="/" exact component={Main} />
           <Route path="/blog" exact component={BlogPage} />
