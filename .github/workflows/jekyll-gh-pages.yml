@@ -17,7 +17,7 @@ jobs:
           npm i --legacy-peer-deps
           npm run build
         env:
-          REACT_APP_DB: ${{ secrets.KEYSTORE_BASE64 }}
+          REACT_APP_DB: ${{ secrets.REACT_APP_DB }}
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
